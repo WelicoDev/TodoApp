@@ -1,0 +1,57 @@
+<!doctype html>
+{% load crispy_forms_tags %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Bosh sahifa</title>
+  </head>
+  <body>
+    <div class="container mt-4">
+        <div class="card-header bg-dark">
+            <h4 class="text-light">TodoApp</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">{% csrf_token %}
+                <div class="input-group mb-3">
+                  <input required name="body" type="text" class="form-control" placeholder="write about your plans" aria-label="write about your plans" aria-describedby="button-addon2">
+                  <button class="btn btn-outline-success" type="submit" id="button-addon2">Send</button>
+                </div>
+            </form>
+            <ol class="list-group list-group-numbered mt-4">
+                {% for todo in todos %}
+                {% if todo.done %}
+                    <li class="list-group-item list-group-item-success d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{ todo.body }}</div>
+                            {{ todo.datetime }}
+                        </div>
+                        <form action="{% url 'action' todo.pk 'delete' %}" method="post">{% csrf_token %}
+                            <button class="btn btn-danger badge rounded-pill m-2">O'chirish</button>
+                        </form>
+                    </li>
+                {% else %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">{{ todo.body }}</div>
+                        {{ todo.datetime }}
+                    </div>
+                    <form action="{% url 'action' todo.pk 'done' %}" method="post">{% csrf_token %}
+                        <button class="btn btn-success badge rounded-pill m-2">Bajarildi</button>
+                    </form>
+                    <form action="{% url 'action' todo.pk 'delete' %}" method="post">{% csrf_token %}
+                        <button class="btn btn-danger badge rounded-pill m-2">O'chirish</button>
+                    </form>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ol>
+        </div>
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger mt-4">Tizimdan chiqish</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
